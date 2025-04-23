@@ -15,12 +15,12 @@ public class xmlAndJSONth : MonoBehaviour
     private string aJsonFile;
     public List<Persons> folks = new List<Persons>()
     {
-        new Persons("Lego Johnson", "5th of April 2002", 5, 4, 2002, "Yellow"),
-        new Persons("Christian", "20/01/2004", 20, 1, 2004, "Blue"),
-        new Persons("Vahid", "11/05/2004",11,05,2004, "Black"),
-        new Persons("Asser", "12/01/1985",12,1,1985, "Red"),
-        new Persons("Meron", "23/10/2003",23,10,2003, "Blue/Purple"),
-        new Persons("God God", "1st of January 01 UT", 1, 1, 1,"Shulux")
+        new Persons("Lego", "Johnson", "5th of April 2002", 5, 4, 2002, "Yellow"),
+        new Persons("Christian","" , "20/01/2004", 20, 1, 2004, "Blue"),
+        new Persons("Vahid","" ,"11/05/2004",11,05,2004, "Black"),
+        new Persons("Asser","", "12/01/1985",12,1,1985, "Red"),
+        new Persons("Meron","", "23/10/2003",23,10,2003, "Blue/Purple"),
+        new Persons("God","God", "1st of January 01 UT", 1, 1, 1,"Shulux")
 
 
     };
@@ -28,9 +28,9 @@ public class xmlAndJSONth : MonoBehaviour
     public void Awake()
     {
         aDirectoryPath = Application.persistentDataPath + "/Game_Data";
-        aTextFile = aDirectoryPath + "dataOnPeople.txt";
-        aXmlFile = aDirectoryPath + "dataOnPeople.xml";
-        aJsonFile = aDirectoryPath + "dataOnPeople.json";
+        aTextFile = aDirectoryPath + "/dataOnPeople.txt";
+        aXmlFile = aDirectoryPath + "/dataOnPeople.xml";
+        aJsonFile = aDirectoryPath + "/dataOnPeople.json";
 
     }
     public void CreateDirectory()
@@ -38,7 +38,7 @@ public class xmlAndJSONth : MonoBehaviour
         if (Directory.Exists(aDirectoryPath))
         {
             Debug.Log("We already got a Directory at home!");
-            Console.WriteLine("And for you smartypants out there, it even includes you! Why am I calling you smartypants? Because only a SmartyPants would be seeing this in their console!");
+            Console.WriteLine("And for you smartypants out there, it even includes you! Why am I calling you smartypants? Because only a SmartyPants would be seeing this in their console! I THINK?!");
             return;
         }
         Directory.CreateDirectory(aDirectoryPath);
@@ -71,7 +71,7 @@ public class xmlAndJSONth : MonoBehaviour
     {
         XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Persons>));
 
-        using (FileStream fStream = File.Create(aTextFile))
+        using (FileStream fStream = File.Create(aXmlFile))
         {
             xmlSerializer.Serialize(fStream, folks);
             Debug.Log("doing ser, i guess, for xml");
@@ -80,10 +80,10 @@ public class xmlAndJSONth : MonoBehaviour
     }
     void DeserializeXml()
     {
-        if (File.Exists(aTextFile))
+        if (File.Exists(aXmlFile))
         {
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Persons>));
-            using (FileStream fStream = File.OpenRead(aTextFile))
+            using (FileStream fStream = File.OpenRead(aXmlFile))
             {
                 lego.SpecialOps = (List<Persons>)xmlSerializer.Deserialize(fStream);
                 Debug.Log("doing de on xml");
@@ -94,7 +94,7 @@ public class xmlAndJSONth : MonoBehaviour
     void SerializeJson()
     {
         string jsonString = JsonUtility.ToJson(lego, true);
-        using (StreamWriter sWriter = File.CreateText(aTextFile))
+        using (StreamWriter sWriter = File.CreateText(aJsonFile))
         {
             sWriter.WriteLine(jsonString);
             Debug.Log("ser json");
@@ -123,7 +123,8 @@ public void Start()
 [Serializable]
 public class Persons
 {
-    private string personName;
+    private string personFirstName;
+    private string personLastName;
     private string personBirthday;
     private int personBirthdayDate;
     private int personBirthdayMonth;
@@ -132,17 +133,18 @@ public class Persons
     //maybe a randomly generated name and such some other time
     //public List<string> firstNames = new List<string>() { "Lenny", "Jerry", "Mary", "Shiru", "Ben", "Terresa", "Lara" };
     //public List<string> lastNames = new List<string>() { "Couper", "Sairyu", "Bøffensen", "Tjansen", "Fiddusen", "Tennyson", "Croft" };
-    public int numbers;
-    public Persons(string name, string birthday, int birthDate, int birthMonth, int birthYear, string favColour)
+    //public int numbers;
+    public Persons(string firstName, string lastName, string birthday, int birthDate, int birthMonth, int birthYear, string favColour)
     {
 
-        this.personName = name;
+        this.personFirstName = firstName;
+        this.personLastName = lastName;
         this.personBirthday = birthday;
         this.personFavColour = favColour;
         this.personBirthdayDate = birthDate;
         this.personBirthdayMonth = birthMonth;
         this.personBirthdayYear = birthYear;
-        Debug.LogFormat("Name: {0}| Birthday: {1} -> {2}/{3}/{4}| Favorite Colour: {5}|", name, birthday, birthDate, birthMonth, birthYear, favColour);
+        Debug.LogFormat("Name: {0} {1}| Birthday: {2} -> {3}/{4}/{5}| Favorite Colour: {6}|", firstName,lastName, birthday, birthDate, birthMonth, birthYear, favColour);
         
     }
     public Persons() { }
@@ -150,5 +152,5 @@ public class Persons
 }
 public class Teams
 {
-    public List<Persons> SpecialOps;
+    public List<Persons>  SpecialOps;
 }
